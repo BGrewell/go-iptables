@@ -3,7 +3,6 @@ package iptables
 import (
 	"fmt"
 	"github.com/BGrewell/go-execute"
-	. "github.com/BGrewell/go-iptables/internal"
 	"log"
 	"strconv"
 	"strings"

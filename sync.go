@@ -3,7 +3,6 @@ package iptables
 import (
 	"fmt"
 	"github.com/BGrewell/go-execute"
-	"github.com/BGrewell/go-iptables/internal"
 	"github.com/google/uuid"
 	"log"
 	"strings"
@@ -11,7 +10,7 @@ import (
 
 func Sync() (rules []*Rule, err error) {
 
-	if !internal.RunningAsRoot() {
+	if !RunningAsRoot() {
 		return nil, fmt.Errorf("error you must run this program as root")
 	}
 
@@ -21,7 +20,7 @@ func Sync() (rules []*Rule, err error) {
 	for _, ipver := range ipvers {
 
 		var ipt string
-		ipt, err = internal.GetIptablesBinaryPath(ipver)
+		ipt, err = GetIptablesBinaryPath(ipver)
 		if err != nil {
 			return nil, err
 		}
