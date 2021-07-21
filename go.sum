@@ -1,0 +1,16 @@
+github.com/BGrewell/go-conversions v0.0.0-20201203155646-5e189e4ca087 h1:/ZR3IHtTSPqwzYQSfZYwGjrmDI5c1u2jEDDtT75Fmqw=
+github.com/BGrewell/go-conversions v0.0.0-20201203155646-5e189e4ca087/go.mod h1:XtXcz/MP04vhr6c6R/5gZPJZVQpbXlFsKTHr5yy/5sU=
+github.com/BGrewell/go-conversions v0.0.0-20210512190113-ef0a66d37f0f h1:R3AmWTnL4VRNqK3dpUEwi+RCUZCNczbBPhA4oyMy+aI=
+github.com/BGrewell/go-conversions v0.0.0-20210512190113-ef0a66d37f0f/go.mod h1:XtXcz/MP04vhr6c6R/5gZPJZVQpbXlFsKTHr5yy/5sU=
+github.com/BGrewell/go-execute v0.0.0-20210608200808-59d5bd9b5ed3 h1:eIGm5GJEnTi0U7N6sHBaK++xqGomyx77ITi663gMD4Q=
+github.com/BGrewell/go-execute v0.0.0-20210608200808-59d5bd9b5ed3/go.mod h1:vQZr3vuuuKuknvi74K22ne7NzOlwKTPKXOFMVr9Qa6A=
+github.com/BGrewell/go-execute v0.0.0-20210721174329-1e92cec9689e h1:ENz9Q93jYX2Zuc9KXRYJ5j2c8meUl9Tw9Ff6IL5G/mM=
+github.com/BGrewell/go-execute v0.0.0-20210721174329-1e92cec9689e/go.mod h1:vQZr3vuuuKuknvi74K22ne7NzOlwKTPKXOFMVr9Qa6A=
+github.com/BGrewell/go-execute v0.0.0-20210721175052-e1f967de24a7 h1:KT5lDlU55FYtFy464lbyXFhUdNjecFiI5dKvaeXp21k=
+github.com/BGrewell/go-execute v0.0.0-20210721175052-e1f967de24a7/go.mod h1:vQZr3vuuuKuknvi74K22ne7NzOlwKTPKXOFMVr9Qa6A=
+github.com/BGrewell/go-execute v0.0.0-20210721175414-f563841a5cae h1:CP2sPfkZ1PzXF+iEcYlkDtqZZQtGiH50VHZSnjRDtzo=
+github.com/BGrewell/go-execute v0.0.0-20210721175414-f563841a5cae/go.mod h1:vQZr3vuuuKuknvi74K22ne7NzOlwKTPKXOFMVr9Qa6A=
+github.com/BGrewell/go-execute v0.0.0-20210721193233-180d8f149d59 h1:cVIY8F2JAWwVnFd0u3M5jRGb0YYwPjNMGak5T1L6yPY=
+github.com/BGrewell/go-execute v0.0.0-20210721193233-180d8f149d59/go.mod h1:ZXlWKP97Nr+wYG5lep8M7XrUuos2PN06a3z0cS497PE=
+github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
+github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
