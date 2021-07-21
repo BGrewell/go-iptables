@@ -81,3 +81,18 @@ func LabelRules() (err error) {
 func CurrentRules() (rules []*Rule, err error) {
 	return Sync()
 }
+
+func GetRuleById(id string) (rule *Rule, err error) {
+	rules, err := Sync()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, rule := range rules {
+		if rule.Id == id {
+			return rule, nil
+		}
+	}
+
+	return nil, fmt.Errorf("no rule with the id %s was found", id)
+}
