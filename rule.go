@@ -455,5 +455,22 @@ func (r *Rule) AddMatch(match Match) {
 	r.Matches = append(r.Matches, match)
 }
 
+func (r *Rule) Update(rule *Rule) {
+	if rule.Name != "" { r.Name = rule.Name }
+	//TODO: Protocol has an issue here because it's an *enum* value so it always has a default value which may or may not be what the user wants
+	if rule.Input != "" {r.Input = rule.Input }
+	if rule.InputNegated {r.InputNegated = rule.InputNegated }
+	if rule.Output != "" {r.Output = rule.Output }
+	if rule.OutputNegated {r.OutputNegated = rule.OutputNegated }
+	if rule.Source != "" {r.Source = rule.Source}
+	if rule.SourceNegated {r.OutputNegated = rule.SourceNegated }
+	if rule.SourcePort != "" {r.SourcePort = rule.SourcePort }
+	if rule.SourcePortNegated {r.SourcePortNegated = rule.SourcePortNegated }
+	if rule.Destination != "" {r.Destination = rule.Destination }
+	if rule.DestinationNegated {r.DestinationNegated = rule.DestinationPortNegated }
+	if rule.DestinationPort != "" {r.DestinationPort = rule.DestinationPort }
+	if rule.DestinationPortNegated {r.DestinationPortNegated = rule.DestinationPortNegated }
+}
+
 // TODO: Don't put the id or name into the markers or matches array's and instead parse those values out
 //       of those arrays when reading rules in, only have other markers and matches in there.
