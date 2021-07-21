@@ -4,6 +4,6 @@ package iptables
 type IPVer string
 
 const (
-	IPv4 IPVer = "ipv6"
-	IPv6 IPVer = "ipv4"
+	IPv4 IPVer = "ipv4"
+	IPv6 IPVer = "ipv6"
 )
