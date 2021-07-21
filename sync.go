@@ -82,6 +82,38 @@ func CurrentRules() (rules []*Rule, err error) {
 	return Sync()
 }
 
+func GetRulesByTable(table string) (rules []*Rule, err error) {
+	all, err := Sync()
+	if err != nil {
+		return nil, err
+	}
+
+	rules = make([]*Rule,0)
+	for _, rule := range all {
+		if rule.Table == Table(table) {
+			rules = append(rules, rule)
+		}
+	}
+
+	return rules, nil
+}
+
+func GetRulesByChain(table string, chain string) (rules []*Rule, err error) {
+	all, err := Sync()
+	if err != nil {
+		return nil, err
+	}
+
+	rules = make([]*Rule,0)
+	for _, rule := range all {
+		if rule.Table == Table(table) && rule.Chain == Chain(chain) {
+			rules = append(rules, rule)
+		}
+	}
+
+	return rules, nil
+}
+
 func GetRuleById(id string) (rule *Rule, err error) {
 	rules, err := Sync()
 	if err != nil {
