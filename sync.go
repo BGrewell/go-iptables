@@ -5,6 +5,7 @@ import (
 	"github.com/BGrewell/go-execute"
 	"github.com/google/uuid"
 	"log"
+	"reflect"
 	"strings"
 )
 
@@ -95,4 +96,21 @@ func GetRuleById(id string) (rule *Rule, err error) {
 	}
 
 	return nil, fmt.Errorf("no rule with the id %s was found", id)
+}
+
+func GetRulesByTarget(target Target) (rules []*Rule, err error) {
+	r, err := Sync()
+	if err != nil {
+		return nil, err
+	}
+
+	rules = make([]*Rule,0)
+
+	for _, rule := range r {
+		if reflect.TypeOf(rule.Target) == reflect.TypeOf(target) {
+			rules = append(rules, rule)
+		}
+	}
+
+	return rules, nil
 }

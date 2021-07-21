@@ -470,6 +470,9 @@ func (r *Rule) Update(rule *Rule) {
 	if rule.DestinationNegated {r.DestinationNegated = rule.DestinationPortNegated }
 	if rule.DestinationPort != "" {r.DestinationPort = rule.DestinationPort }
 	if rule.DestinationPortNegated {r.DestinationPortNegated = rule.DestinationPortNegated }
+
+	// TODO: There is a lot of updating needed here. Many rule fields should be pointers so that we can tell wehn
+	// 		 they are left out vs default. We also need a way to know if we should remove/add markers etc
 }
 
 // TODO: Don't put the id or name into the markers or matches array's and instead parse those values out
