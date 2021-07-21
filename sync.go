@@ -69,7 +69,6 @@ func LabelRules() (err error) {
 		if rule.Id == "" {
 			id := uuid.New().String()
 			rule.Id = id
-			rule.Debug = true
 			fmt.Println(rule)
 			err := rule.Replace()
 			if err != nil {
