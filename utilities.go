@@ -16,7 +16,6 @@ import (
 //		 likely in our use cases.
 
 var (
-	tables = []string{"filter", "nat", "mangle", "raw"}
 	errNoMatch = fmt.Errorf("no matching rule was found")
 	tableLock = sync.Mutex{}
 )
