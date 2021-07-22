@@ -273,7 +273,7 @@ func getPolicy(ver IPVer, table string, chain string) (policy string, err error)
 	if err != nil {
 		return "", err
 	}
-	listCmd := fmt.Sprintf("%s -t %s %s", ipt, table, chain)
+	listCmd := fmt.Sprintf("%s -t %s -S %s", ipt, table, chain)
 	result, err := execute.ExecuteCmd(listCmd)
 	if err != nil {
 		return "", err
