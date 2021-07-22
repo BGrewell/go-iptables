@@ -278,9 +278,14 @@ func getPolicy(ver IPVer, table string, chain string) (policy string, err error)
 	if err != nil {
 		return "", err
 	}
-	fields := strings.Fields(result)
-	if len(fields) == 3 {
-		return fields[2], nil
+	lines := strings.Split(result, "\n")
+	for _, line := range lines {
+		if strings.HasPrefix(line, "-P") {
+			fields := strings.Fields(result)
+			if len(fields) == 3 {
+				return fields[2], nil
+			}
+		}
 	}
 
 	return "", fmt.Errorf("unable to get policy for chain %s", chain)
