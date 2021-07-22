@@ -1,7 +1,6 @@
 package iptables
 
 import (
-	"encoding/json"
 	"fmt"
 )
 
@@ -14,18 +13,18 @@ type TargetDSCP struct {
 	Value int `json:"value" yaml:"value" xml:"value"`
 }
 
-func (t *TargetDSCP) MarshalJSON() (b []byte, e error) {
-	type TargetDSCPHelper struct {
-		Type string `json:"type"`
-		Value *TargetDSCP `json:"value"`
-	}
-
-	th := TargetDSCPHelper{
-		Type: "goto",
-		Value: t,
-	}
-	return json.Marshal(th)
-}
+//func (t *TargetDSCP) MarshalJSON() (b []byte, e error) {
+//	type TargetDSCPHelper struct {
+//		Type string `json:"type"`
+//		Value *TargetDSCP `json:"value"`
+//	}
+//
+//	th := TargetDSCPHelper{
+//		Type: "goto",
+//		Value: t,
+//	}
+//	return json.Marshal(th)
+//}
 
 func (t TargetDSCP) String() string {
 	return TargetJump{

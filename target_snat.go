@@ -1,7 +1,6 @@
 package iptables
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -17,18 +16,18 @@ type TargetSNat struct {
 	SourcePortRange string `json:"source_port_range,omitempty" yaml:"source_port_range" xml:"source_port_range"`
 }
 
-func (t *TargetSNat) MarshalJSON() (b []byte, e error) {
-	type TargetSNatHelper struct {
-		Type string `json:"type"`
-		Value *TargetSNat `json:"value"`
-	}
-
-	th := TargetSNatHelper{
-		Type: "snat",
-		Value: t,
-	}
-	return json.Marshal(th)
-}
+//func (t *TargetSNat) MarshalJSON() (b []byte, e error) {
+//	type TargetSNatHelper struct {
+//		Type string `json:"type"`
+//		Value *TargetSNat `json:"value"`
+//	}
+//
+//	th := TargetSNatHelper{
+//		Type: "snat",
+//		Value: t,
+//	}
+//	return json.Marshal(th)
+//}
 
 func (t TargetSNat) String() string {
 	parts := make([]string, 0)

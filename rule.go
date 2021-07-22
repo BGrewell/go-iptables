@@ -48,6 +48,7 @@ type Rule struct {
 	DestinationPort        string   `json:"destination_port,omitempty" yaml:"destination_port" xml:"destination_port"`
 	DestinationPortNegated bool     `json:"destination_port_negated,omitempty" yaml:"destination_port_negated" xml:"destination_port_negated"`
 	Target                 Target   `json:"target,omitempty" yaml:"target" xml:"target"`
+	TargetType             string   `json:"target_type,omitempty" yaml:"target_type" xml:"target_type"`
 	Markers                []Marker `json:"markers,omitempty" yaml:"markers" xml:"markers"`
 	Matches                []Match  `json:"matches,omitempty" yaml:"matches" xml:"matches"`
 	Counters               Counter  `json:"counters,omitempty" yaml:"counters" xml:"counters"`
@@ -58,173 +59,226 @@ type Rule struct {
 	command                Cmd      `json:"command,omitempty" yaml:"command" xml:"command"`
 }
 
-func (r *Rule) Unmarshal(b []byte) error {
+func (r *Rule) UnmarshalJSON(b []byte) error {
 
-	type TargetHelper struct {
-		Type string `json:"type"`
-		Value interface{} `json:"value"`
-	}
-
-	var raw []json.RawMessage
+	var raw json.RawMessage
 	err := json.Unmarshal(b, &raw)
 	if err != nil {
 		return err
 	}
 
-	for _, r := range raw {
-		var obj map[string]interface{}
-		err := json.Unmarshal(r, &obj)
+	var obj map[string]interface{}
+	err = json.Unmarshal(raw, &obj)
+	if err != nil {
+		return err
+	}
+
+
+	if v, ok := obj["id"]; ok {
+		r.Id = v.(string)
+	}
+
+	if v, ok := obj["name"]; ok {
+		r.Name = v.(string)
+	}
+
+	if v, ok := obj["table"]; ok {
+		r.Table = Table(v.(string))
+	}
+
+	if v, ok := obj["chain"]; ok {
+		r.Chain = Chain(v.(string))
+	}
+
+	if v, ok := obj["ip_version"]; ok {
+		r.IpVersion = IPVer(v.(string))
+	}
+
+	if v, ok := obj["protocol"]; ok {
+		r.Protocol = Protocol(v.(string))
+	}
+
+	if v, ok := obj["protocol_negated"]; ok {
+		r.ProtocolNegated = v.(bool)
+	}
+
+	if v, ok := obj["opt"]; ok {
+		r.Opt = v.(string)
+	}
+
+	if v, ok := obj["input"]; ok {
+		r.Input = v.(string)
+	}
+
+	if v, ok := obj["input_negated"]; ok {
+		r.InputNegated = v.(bool)
+	}
+
+	if v, ok := obj["output"]; ok {
+		r.Output = v.(string)
+	}
+
+	if v, ok := obj["output_negated"]; ok {
+		r.OutputNegated = v.(bool)
+	}
+
+	if v, ok := obj["source"]; ok {
+		r.Source = v.(string)
+	}
+
+	if v, ok := obj["source_negated"]; ok {
+		r.SourceNegated = v.(bool)
+	}
+
+	if v, ok := obj["source_port"]; ok {
+		r.SourcePort = v.(string)
+	}
+
+	if v, ok := obj["source_port_negated"]; ok {
+		r.SourcePortNegated = v.(bool)
+	}
+
+	if v, ok := obj["destination"]; ok {
+		r.Destination = v.(string)
+	}
+
+	if v, ok := obj["destination_negated"]; ok {
+		r.DestinationNegated = v.(bool)
+	}
+
+	if v, ok := obj["destination_port"]; ok {
+		r.DestinationPort = v.(string)
+	}
+
+	if v, ok := obj["destination_port_negated"]; ok {
+		r.DestinationPortNegated = v.(bool)
+	}
+
+	if v, ok := obj["target_type"]; ok {
+		t := v.(string)
+		tmap := obj["target"]
+		tjson, err := json.Marshal(tmap)
 		if err != nil {
 			return err
 		}
-
-		rule := Rule{}
-
-		if v, ok := obj["id"]; ok {
-			rule.Id = v.(string)
-		}
-
-		if v, ok := obj["name"]; ok {
-			rule.Name = v.(string)
-		}
-
-		if v, ok := obj["table"]; ok {
-			rule.Table = v.(Table)
-		}
-
-		if v, ok := obj["chain"]; ok {
-			rule.Chain = v.(Chain)
-		}
-
-		if v, ok := obj["ip_version"]; ok {
-			rule.IpVersion = v.(IPVer)
-		}
-
-		if v, ok := obj["protocol"]; ok {
-			rule.Protocol = v.(Protocol)
-		}
-
-		if v, ok := obj["protocol_negated"]; ok {
-			rule.ProtocolNegated = v.(bool)
-		}
-
-		if v, ok := obj["opt"]; ok {
-			rule.Opt = v.(string)
-		}
-
-		if v, ok := obj["input"]; ok {
-			rule.Input = v.(string)
-		}
-
-		if v, ok := obj["input_negated"]; ok {
-			rule.InputNegated = v.(bool)
-		}
-
-		if v, ok := obj["output"]; ok {
-			rule.Output = v.(string)
-		}
-
-		if v, ok := obj["output_negated"]; ok {
-			rule.OutputNegated = v.(bool)
-		}
-
-		if v, ok := obj["source"]; ok {
-			rule.Source = v.(string)
-		}
-
-		if v, ok := obj["source_negated"]; ok {
-			rule.SourceNegated = v.(bool)
-		}
-
-		if v, ok := obj["source_port"]; ok {
-			rule.SourcePort = v.(string)
-		}
-
-		if v, ok := obj["source_port_negated"]; ok {
-			rule.SourcePortNegated = v.(bool)
-		}
-
-		if v, ok := obj["destination"]; ok {
-			rule.Destination = v.(string)
-		}
-
-		if v, ok := obj["destination_negated"]; ok {
-			rule.DestinationNegated = v.(bool)
-		}
-
-		if v, ok := obj["destination_port"]; ok {
-			rule.DestinationPort = v.(string)
-		}
-
-		if v, ok := obj["destination_port_negated"]; ok {
-			rule.DestinationPortNegated = v.(bool)
-		}
-
-		if v, ok := obj["target"]; ok {
-			t := v.(TargetHelper)
-			switch t.Type {
-			case "balance":
-				tt := t.Value.(TargetBalance)
-				rule.Target = &tt
-			case "classify":
-				tt := t.Value.(TargetClassify)
-				rule.Target = &tt
-			case "connmark":
-				tt := t.Value.(TargetConnMark)
-				rule.Target = &tt
-			case "dnat":
-				tt := t.Value.(TargetDNat)
-				rule.Target = &tt
-			case "dscp":
-				tt := t.Value.(TargetDSCP)
-				rule.Target = &tt
-			case "dscp-class":
-				tt := t.Value.(TargetDSCPClass)
-				rule.Target = &tt
-			case "goto":
-				tt := t.Value.(TargetGoto)
-				rule.Target = &tt
-			case "jump":
-				tt := t.Value.(TargetJump)
-				rule.Target = &tt
-			case "masquerade":
-				tt := t.Value.(TargetMasquerade)
-				rule.Target = &tt
-			case "snat":
-				tt := t.Value.(TargetSNat)
-				rule.Target = &tt
-			default:
-				return fmt.Errorf("unknown target type %s", t.Type)
+		switch t {
+		case "balance":
+			var tt TargetBalance
+			err = json.Unmarshal(tjson, &tt)
+			if err != nil {
+				return err
 			}
+			r.Target = &tt
+		case "classify":
+			var tt TargetClassify
+			err = json.Unmarshal(tjson, &tt)
+			if err != nil {
+				return err
+			}
+			r.Target = &tt
+		case "connmark":
+			var tt TargetConnMark
+			err = json.Unmarshal(tjson, &tt)
+			if err != nil {
+				return err
+			}
+			r.Target = &tt
+		case "dnat":
+			var tt TargetDNat
+			err = json.Unmarshal(tjson, &tt)
+			if err != nil {
+				return err
+			}
+			r.Target = &tt
+		case "dscp":
+			var tt TargetDSCP
+			err = json.Unmarshal(tjson, &tt)
+			if err != nil {
+				return err
+			}
+			r.Target = &tt
+		case "dscp-class":
+			var tt TargetDSCPClass
+			err = json.Unmarshal(tjson, &tt)
+			if err != nil {
+				return err
+			}
+			r.Target = &tt
+		case "goto":
+			var tt TargetGoto
+			err = json.Unmarshal(tjson, &tt)
+			if err != nil {
+				return err
+			}
+			r.Target = &tt
+		case "jump":
+			var tt TargetJump
+			err = json.Unmarshal(tjson, &tt)
+			if err != nil {
+				return err
+			}
+			r.Target = &tt
+		case "masquerade":
+			var tt TargetMasquerade
+			err = json.Unmarshal(tjson, &tt)
+			if err != nil {
+				return err
+			}
+			r.Target = &tt
+		case "snat":
+			var tt TargetSNat
+			err = json.Unmarshal(tjson, &tt)
+			if err != nil {
+				return err
+			}
+			r.Target = &tt
+		case "":
+			var tt TargetJump
+			err = json.Unmarshal(tjson, &tt)
+			if err != nil {
+				return err
+			}
+			r.Target = &tt
+		default:
+			return fmt.Errorf("unknown target type %s", t)
 		}
+	}
 
-		if v, ok := obj["markers"]; ok {
-			rule.Markers = v.([]Marker)
-		}
+	if v, ok := obj["markers"]; ok {
+		r.Markers = v.([]Marker)
+	}
 
-		if v, ok := obj["matches"]; ok {
-			rule.Matches = v.([]Match)
-		}
+	if v, ok := obj["matches"]; ok {
+		r.Matches = v.([]Match)
+	}
 
-		if v, ok := obj["counters"]; ok {
-			rule.Counters = v.(Counter)
+	if v, ok := obj["counters"]; ok {
+		cjson, err := json.Marshal(v)
+		if err != nil {
+			return err
 		}
+		var c Counter
+		err = json.Unmarshal(cjson, &c)
+		if err != nil {
+			return err
+		}
+		r.Counters = c
+	}
 
-		if v, ok := obj["valid"]; ok {
-			rule.Valid = v.(bool)
-		}
+	if v, ok := obj["valid"]; ok {
+		r.Valid = v.(bool)
+	}
 
-		if v, ok := obj["applied"]; ok {
-			rule.Applied = v.(bool)
-		}
+	if v, ok := obj["applied"]; ok {
+		r.Applied = v.(bool)
+	}
 
-		if v, ok := obj["rule_number"]; ok {
-			rule.Number = v.(int)
-		}
+	if v, ok := obj["rule_number"]; ok {
+		r.Number = v.(int)
+	}
 
-		if v, ok := obj["debug"]; ok {
-			rule.Debug = v.(bool)
-		}
+	if v, ok := obj["debug"]; ok {
+		r.Debug = v.(bool)
 	}
 
 	return nil
@@ -628,20 +682,46 @@ func (r *Rule) AddMatch(match Match) {
 }
 
 func (r *Rule) Update(rule *Rule) {
-	if rule.Name != "" { r.Name = rule.Name }
+	if rule.Name != "" {
+		r.Name = rule.Name
+	}
 	//TODO: Protocol has an issue here because it's an *enum* value so it always has a default value which may or may not be what the user wants
-	if rule.Input != "" {r.Input = rule.Input }
-	if rule.InputNegated {r.InputNegated = rule.InputNegated }
-	if rule.Output != "" {r.Output = rule.Output }
-	if rule.OutputNegated {r.OutputNegated = rule.OutputNegated }
-	if rule.Source != "" {r.Source = rule.Source}
-	if rule.SourceNegated {r.OutputNegated = rule.SourceNegated }
-	if rule.SourcePort != "" {r.SourcePort = rule.SourcePort }
-	if rule.SourcePortNegated {r.SourcePortNegated = rule.SourcePortNegated }
-	if rule.Destination != "" {r.Destination = rule.Destination }
-	if rule.DestinationNegated {r.DestinationNegated = rule.DestinationPortNegated }
-	if rule.DestinationPort != "" {r.DestinationPort = rule.DestinationPort }
-	if rule.DestinationPortNegated {r.DestinationPortNegated = rule.DestinationPortNegated }
+	if rule.Input != "" {
+		r.Input = rule.Input
+	}
+	if rule.InputNegated {
+		r.InputNegated = rule.InputNegated
+	}
+	if rule.Output != "" {
+		r.Output = rule.Output
+	}
+	if rule.OutputNegated {
+		r.OutputNegated = rule.OutputNegated
+	}
+	if rule.Source != "" {
+		r.Source = rule.Source
+	}
+	if rule.SourceNegated {
+		r.OutputNegated = rule.SourceNegated
+	}
+	if rule.SourcePort != "" {
+		r.SourcePort = rule.SourcePort
+	}
+	if rule.SourcePortNegated {
+		r.SourcePortNegated = rule.SourcePortNegated
+	}
+	if rule.Destination != "" {
+		r.Destination = rule.Destination
+	}
+	if rule.DestinationNegated {
+		r.DestinationNegated = rule.DestinationPortNegated
+	}
+	if rule.DestinationPort != "" {
+		r.DestinationPort = rule.DestinationPort
+	}
+	if rule.DestinationPortNegated {
+		r.DestinationPortNegated = rule.DestinationPortNegated
+	}
 
 	// TODO: There is a lot of updating needed here. Many rule fields should be pointers so that we can tell wehn
 	// 		 they are left out vs default. We also need a way to know if we should remove/add markers etc

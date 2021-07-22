@@ -1,7 +1,6 @@
 package iptables
 
 import (
-	"encoding/json"
 	"fmt"
 )
 
@@ -26,18 +25,18 @@ type TargetConnMark struct {
 	Value    int          `json:"value" yaml:"value" xml:"value"`
 }
 
-func (t *TargetConnMark) MarshalJSON() (b []byte, e error) {
-	type TargetConnMarkHelper struct {
-		Type string `json:"type"`
-		Value *TargetConnMark `json:"value"`
-	}
-
-	th := TargetConnMarkHelper{
-		Type: "connmark",
-		Value: t,
-	}
-	return json.Marshal(th)
-}
+//func (t *TargetConnMark) MarshalJSON() (b []byte, e error) {
+//	type TargetConnMarkHelper struct {
+//		Type string `json:"type"`
+//		Value *TargetConnMark `json:"value"`
+//	}
+//
+//	th := TargetConnMarkHelper{
+//		Type: "connmark",
+//		Value: t,
+//	}
+//	return json.Marshal(th)
+//}
 
 func (t TargetConnMark) String() string {
 	target := ""

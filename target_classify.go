@@ -1,7 +1,6 @@
 package iptables
 
 import (
-	"encoding/json"
 	"fmt"
 )
 
@@ -14,18 +13,18 @@ type TargetClassify struct {
 	Minor int `json:"minor" yaml:"minor" xml:"minor"`
 }
 
-func (t *TargetClassify) MarshalJSON() (b []byte, e error) {
-	type TargetClassifyHelper struct {
-		Type string `json:"type"`
-		Value *TargetClassify `json:"value"`
-	}
-
-	th := TargetClassifyHelper{
-		Type: "classify",
-		Value: t,
-	}
-	return json.Marshal(th)
-}
+//func (t *TargetClassify) MarshalJSON() (b []byte, e error) {
+//	type TargetClassifyHelper struct {
+//		Type string `json:"type"`
+//		Value *TargetClassify `json:"value"`
+//	}
+//
+//	th := TargetClassifyHelper{
+//		Type: "classify",
+//		Value: t,
+//	}
+//	return json.Marshal(th)
+//}
 
 func (t TargetClassify) String() string {
 	return TargetJump{

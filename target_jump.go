@@ -1,7 +1,6 @@
 package iptables
 
 import (
-	"encoding/json"
 	"fmt"
 )
 
@@ -13,18 +12,19 @@ type TargetJump struct {
 	Value string `json:"value" yaml:"value" xml:"value"`
 }
 
-func (t *TargetJump) MarshalJSON() (b []byte, e error) {
-	type TargetJumpHelper struct {
-		Type string `json:"type"`
-		Value *TargetJump `json:"value"`
-	}
-
-	th := TargetJumpHelper{
-		Type: "jump",
-		Value: t,
-	}
-	return json.Marshal(th)
-}
+//type TargetJumpHelper struct {
+//	Type string `json:"type"`
+//	Value *TargetJump `json:"value"`
+//}
+//
+//func (t *TargetJump) MarshalJSON() (b []byte, e error) {
+//
+//	th := TargetJumpHelper{
+//		Type: "jump",
+//		Value: t,
+//	}
+//	return json.Marshal(th)
+//}
 
 func (t TargetJump) String() string {
 	return fmt.Sprintf("%s %s", TargetJumpStr, t.Value)

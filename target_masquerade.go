@@ -1,7 +1,6 @@
 package iptables
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -15,18 +14,18 @@ type TargetMasquerade struct {
 	DestinationPortRange string `json:"destination_port_range" yaml:"destination_port_range" xml:"destination_port_range"`
 }
 
-func (t *TargetMasquerade) MarshalJSON() (b []byte, e error) {
-	type TargetMasqueradeHelper struct {
-		Type string `json:"type"`
-		Value *TargetMasquerade `json:"value"`
-	}
-
-	th := TargetMasqueradeHelper{
-		Type: "masquerade",
-		Value: t,
-	}
-	return json.Marshal(th)
-}
+//func (t *TargetMasquerade) MarshalJSON() (b []byte, e error) {
+//	type TargetMasqueradeHelper struct {
+//		Type string `json:"type"`
+//		Value *TargetMasquerade `json:"value"`
+//	}
+//
+//	th := TargetMasqueradeHelper{
+//		Type: "masquerade",
+//		Value: t,
+//	}
+//	return json.Marshal(th)
+//}
 
 func (t TargetMasquerade) String() string {
 	parts := make([]string, 0)
