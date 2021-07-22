@@ -281,7 +281,7 @@ func getPolicy(ver IPVer, table string, chain string) (policy string, err error)
 	lines := strings.Split(result, "\n")
 	for _, line := range lines {
 		if strings.HasPrefix(line, "-P") {
-			fields := strings.Fields(result)
+			fields := strings.Fields(line)
 			if len(fields) == 3 {
 				return fields[2], nil
 			}
