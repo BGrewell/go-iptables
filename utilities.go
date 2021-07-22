@@ -260,8 +260,46 @@ func FindRuleByCommentWithPrefix(comment string, prefix *string) (location *Rule
 	return nil, errNoMatch
 }
 
+func GetPolicy(table string, chain string) (policy string, err error) {
+	return getPolicy(IPv4, table, chain)
+}
+
+func Get6Policy(table string, chain string) (policy string, err error) {
+	return getPolicy(IPv6, table, chain)
+}
+
+func getPolicy(ver IPVer, table string, chain string) (policy string, err error) {
+	ipt, err := GetIptablesBinaryPath(string(ver))
+	if err != nil {
+		return "", err
+	}
+	listCmd := fmt.Sprintf("%s -t %s %s", ipt, table, chain)
+	result, err := execute.ExecuteCmd(listCmd)
+	if err != nil {
+		return "", err
+	}
+	fields := strings.Fields(result)
+	if len(fields) == 3 {
+		return fields[2], nil
+	}
+
+	return "", fmt.Errorf("unable to get policy for chain %s", chain)
+}
+
 func EnumerateRules(table string, chain string) (rules []string, err error) {
-	listCmd := fmt.Sprintf("iptables -t %s -vnL %s --line-numbers", table, chain)
+	return enumerateRules(IPv4, table, chain)
+}
+
+func Enumerate6Rules(table string, chain string) (rules []string, err error) {
+	return enumerateRules(IPv6, table, chain)
+}
+
+func enumerateRules(ver IPVer, table string, chain string) (rules []string, err error) {
+	v := ""
+	if ver == IPv6 {
+		v = "6"
+	}
+	listCmd := fmt.Sprintf("ip%stables -t %s -vnL %s --line-numbers", v, table, chain)
 	result, err := execute.ExecuteCmd(listCmd)
 	if err != nil {
 		return nil, err
@@ -271,6 +309,14 @@ func EnumerateRules(table string, chain string) (rules []string, err error) {
 }
 
 func EnumerateChains(table string) (chains []string, err error) {
+	return enumerateChains(IPv4, table)
+}
+
+func Enumerate6Chains(table string) (chains []string, err error) {
+	return enumerateChains(IPv6, table)
+}
+
+func enumerateChains(ver IPVer, table string) (chains []string, err error) {
 	chains = make([]string, 0)
 	listCmd := fmt.Sprintf("iptables -t %s -vnL --line-numbers", table)
 	result, err := execute.ExecuteCmd(listCmd)
@@ -288,8 +334,19 @@ func EnumerateChains(table string) (chains []string, err error) {
 }
 
 func EnumerateUsedTables() (tables []string, err error) {
+	return enumerateUsedTables(IPv4)
+}
+
+func EnumerateUsed6Tables() (tables []string, err error) {
+	return enumerateUsedTables(IPv6)
+}
+
+func enumerateUsedTables(ver IPVer) (tables []string, err error) {
 	tables = make([]string, 0)
 	cmd := "cat /proc/net/ip_tables_names"
+	if ver == IPv6 {
+		cmd = "cat /proc/net/ip6_tables_names"
+	}
 	result, err := execute.ExecuteCmd(cmd)
 	if err != nil {
 		return nil, err
@@ -339,3 +396,5 @@ func GetNegatedPattern(negated bool) string {
 	}
 	return ""
 }
+
+// TODO: Need to make sure all of these functions work with ipv4 and ipv6 as those are diffrent iptables
