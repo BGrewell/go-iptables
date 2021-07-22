@@ -447,7 +447,7 @@ func (r *Rule) Validate() (err error) {
 	}
 
 	// Check to make sure name doesn't exist
-	if NameExists(r.Name) {
+	if NameExists(r.Name) && (r.command == CmdInsert || r.command == CmdAppend) {
 		return fmt.Errorf("a rule with the name %s already exists", r.Name)
 	}
 
