@@ -1,6 +1,9 @@
 package iptables
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 const (
 	TargetDSCPStr      string = "--set-dscp"
@@ -9,6 +12,19 @@ const (
 
 type TargetDSCP struct {
 	Value int `json:"value" yaml:"value" xml:"value"`
+}
+
+func (t *TargetDSCP) MarshalJSON() (b []byte, e error) {
+	type TargetDSCPHelper struct {
+		Type string `json:"type"`
+		Value *TargetDSCP `json:"value"`
+	}
+
+	th := TargetDSCPHelper{
+		Type: "goto",
+		Value: t,
+	}
+	return json.Marshal(th)
 }
 
 func (t TargetDSCP) String() string {
@@ -41,9 +57,12 @@ func (t TargetDSCPClass) String() string {
 }
 
 // Returns if the target is valid when applied with the specified rule
-func (t TargetDSCPClass) Valid(rule Rule) bool {
+func (t TargetDSCPClass) Validate(rule Rule) error {
 	// Only valid on the mangle table
-	return rule.Table == TableMangle
+	if rule.Table != TableMangle {
+		return fmt.Errorf("target DSCP is only valid on the 'mangle' table")
+	}
+	return nil
 }
 
 func (t *TargetDSCPClass) Parse(option string, value string) {

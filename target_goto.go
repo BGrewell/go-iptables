@@ -1,6 +1,9 @@
 package iptables
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 const (
 	TargetGotoStr string = "--goto"
@@ -8,6 +11,19 @@ const (
 
 type TargetGoto struct {
 	Value string `json:"value" yaml:"value" xml:"value"`
+}
+
+func (t *TargetGoto) MarshalJSON() (b []byte, e error) {
+	type TargetGotoHelper struct {
+		Type string `json:"type"`
+		Value *TargetGoto `json:"value"`
+	}
+
+	th := TargetGotoHelper{
+		Type: "goto",
+		Value: t,
+	}
+	return json.Marshal(th)
 }
 
 func (t TargetGoto) String() string {

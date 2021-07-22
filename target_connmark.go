@@ -1,6 +1,9 @@
 package iptables
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 //TODO: Need to fully implement by supporting masks for the mark
 
@@ -21,6 +24,19 @@ const (
 type TargetConnMark struct {
 	MarkType ConnMarkType `json:"mark_type" yaml:"mark_type" xml:"mark_type"`
 	Value    int          `json:"value" yaml:"value" xml:"value"`
+}
+
+func (t *TargetConnMark) MarshalJSON() (b []byte, e error) {
+	type TargetConnMarkHelper struct {
+		Type string `json:"type"`
+		Value *TargetConnMark `json:"value"`
+	}
+
+	th := TargetConnMarkHelper{
+		Type: "connmark",
+		Value: t,
+	}
+	return json.Marshal(th)
 }
 
 func (t TargetConnMark) String() string {

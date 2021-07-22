@@ -1,6 +1,7 @@
 package iptables
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/BGrewell/go-execute"
 	"log"
@@ -56,6 +57,182 @@ type Rule struct {
 	Number                 int      `json:"rule_number,omitempty" yaml:"rule_number" xml:"rule_number"`
 	Debug                  bool     `json:"debug,omitempty" yaml:"debug" xml:"debug"`
 	command                Cmd      `json:"command,omitempty" yaml:"command" xml:"command"`
+}
+
+func (r *Rule) Unmarshal(b []byte) error {
+
+	type TargetHelper struct {
+		Type string `json:"type"`
+		Value interface{} `json:"value"`
+	}
+
+	var raw []json.RawMessage
+	err := json.Unmarshal(b, &raw)
+	if err != nil {
+		return err
+	}
+
+	for _, r := range raw {
+		var obj map[string]interface{}
+		err := json.Unmarshal(r, &obj)
+		if err != nil {
+			return err
+		}
+
+		rule := Rule{}
+
+		if v, ok := obj["id"]; ok {
+			rule.Id = v.(string)
+		}
+
+		if v, ok := obj["name"]; ok {
+			rule.Name = v.(string)
+		}
+
+		if v, ok := obj["table"]; ok {
+			rule.Table = v.(Table)
+		}
+
+		if v, ok := obj["chain"]; ok {
+			rule.Chain = v.(Chain)
+		}
+
+		if v, ok := obj["ip_version"]; ok {
+			rule.IpVersion = v.(IPVer)
+		}
+
+		if v, ok := obj["protocol"]; ok {
+			rule.Protocol = v.(Protocol)
+		}
+
+		if v, ok := obj["protocol_negated"]; ok {
+			rule.ProtocolNegated = v.(bool)
+		}
+
+		if v, ok := obj["opt"]; ok {
+			rule.Opt = v.(string)
+		}
+
+		if v, ok := obj["input"]; ok {
+			rule.Input = v.(string)
+		}
+
+		if v, ok := obj["input_negated"]; ok {
+			rule.InputNegated = v.(bool)
+		}
+
+		if v, ok := obj["output"]; ok {
+			rule.Output = v.(string)
+		}
+
+		if v, ok := obj["output_negated"]; ok {
+			rule.OutputNegated = v.(bool)
+		}
+
+		if v, ok := obj["source"]; ok {
+			rule.Source = v.(string)
+		}
+
+		if v, ok := obj["source_negated"]; ok {
+			rule.SourceNegated = v.(bool)
+		}
+
+		if v, ok := obj["source_port"]; ok {
+			rule.SourcePort = v.(string)
+		}
+
+		if v, ok := obj["source_port_negated"]; ok {
+			rule.SourcePortNegated = v.(bool)
+		}
+
+		if v, ok := obj["destination"]; ok {
+			rule.Destination = v.(string)
+		}
+
+		if v, ok := obj["destination_negated"]; ok {
+			rule.DestinationNegated = v.(bool)
+		}
+
+		if v, ok := obj["destination_port"]; ok {
+			rule.DestinationPort = v.(string)
+		}
+
+		if v, ok := obj["destination_port_negated"]; ok {
+			rule.DestinationPortNegated = v.(bool)
+		}
+
+		if v, ok := obj["action"]; ok {
+			rule.Action = v.(Action)
+		}
+
+		if v, ok := obj["target"]; ok {
+			t := v.(TargetHelper)
+			switch t.Type {
+			case "balance":
+				tt := t.Value.(TargetBalance)
+				rule.Target = &tt
+			case "classify":
+				tt := t.Value.(TargetClassify)
+				rule.Target = &tt
+			case "connmark":
+				tt := t.Value.(TargetConnMark)
+				rule.Target = &tt
+			case "dnat":
+				tt := t.Value.(TargetDNat)
+				rule.Target = &tt
+			case "dscp":
+				tt := t.Value.(TargetDSCP)
+				rule.Target = &tt
+			case "dscp-class":
+				tt := t.Value.(TargetDSCPClass)
+				rule.Target = &tt
+			case "goto":
+				tt := t.Value.(TargetGoto)
+				rule.Target = &tt
+			case "jump":
+				tt := t.Value.(TargetJump)
+				rule.Target = &tt
+			case "masquerade":
+				tt := t.Value.(TargetMasquerade)
+				rule.Target = &tt
+			case "snat":
+				tt := t.Value.(TargetSNat)
+				rule.Target = &tt
+			default:
+				return fmt.Errorf("unknown target type %s", t.Type)
+			}
+		}
+
+		if v, ok := obj["markers"]; ok {
+			rule.Markers = v.([]Marker)
+		}
+
+		if v, ok := obj["matches"]; ok {
+			rule.Matches = v.([]Match)
+		}
+
+		if v, ok := obj["counters"]; ok {
+			rule.Counters = v.(Counter)
+		}
+
+		if v, ok := obj["valid"]; ok {
+			rule.Valid = v.(bool)
+		}
+
+		if v, ok := obj["applied"]; ok {
+			rule.Applied = v.(bool)
+		}
+
+		if v, ok := obj["rule_number"]; ok {
+			rule.Number = v.(int)
+		}
+
+		if v, ok := obj["debug"]; ok {
+			rule.Debug = v.(bool)
+		}
+	}
+
+	return nil
 }
 
 func (r *Rule) setDefaults() {

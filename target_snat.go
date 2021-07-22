@@ -1,6 +1,7 @@
 package iptables
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -10,10 +11,23 @@ const (
 )
 
 type TargetSNat struct {
-	SourceIp        string `json:"source_ip" yaml:"source_ip" xml:"source_ip"`
-	SourceIpRange   string `json:"source_ip_range" yaml:"source_ip_range" xml:"source_ip_range"`
-	SourcePort      string `json:"source_port" yaml:"source_port" xml:"source_port"`
-	SourcePortRange string `json:"source_port_range" yaml:"source_port_range" xml:"source_port_range"`
+	SourceIp        string `json:"source_ip,omitempty" yaml:"source_ip" xml:"source_ip"`
+	SourceIpRange   string `json:"source_ip_range,omitempty" yaml:"source_ip_range" xml:"source_ip_range"`
+	SourcePort      string `json:"source_port,omitempty" yaml:"source_port" xml:"source_port"`
+	SourcePortRange string `json:"source_port_range,omitempty" yaml:"source_port_range" xml:"source_port_range"`
+}
+
+func (t *TargetSNat) MarshalJSON() (b []byte, e error) {
+	type TargetSNatHelper struct {
+		Type string `json:"type"`
+		Value *TargetSNat `json:"value"`
+	}
+
+	th := TargetSNatHelper{
+		Type: "snat",
+		Value: t,
+	}
+	return json.Marshal(th)
 }
 
 func (t TargetSNat) String() string {
