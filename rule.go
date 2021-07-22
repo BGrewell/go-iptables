@@ -47,7 +47,6 @@ type Rule struct {
 	DestinationNegated     bool     `json:"destination_negated,omitempty" yaml:"destination_negated" xml:"destination_negated"`
 	DestinationPort        string   `json:"destination_port,omitempty" yaml:"destination_port" xml:"destination_port"`
 	DestinationPortNegated bool     `json:"destination_port_negated,omitempty" yaml:"destination_port_negated" xml:"destination_port_negated"`
-	Action                 Action   `json:"action,omitempty" yaml:"action" xml:"action"`
 	Target                 Target   `json:"target,omitempty" yaml:"target" xml:"target"`
 	Markers                []Marker `json:"markers,omitempty" yaml:"markers" xml:"markers"`
 	Matches                []Match  `json:"matches,omitempty" yaml:"matches" xml:"matches"`
@@ -159,10 +158,6 @@ func (r *Rule) Unmarshal(b []byte) error {
 
 		if v, ok := obj["destination_port_negated"]; ok {
 			rule.DestinationPortNegated = v.(bool)
-		}
-
-		if v, ok := obj["action"]; ok {
-			rule.Action = v.(Action)
 		}
 
 		if v, ok := obj["target"]; ok {
