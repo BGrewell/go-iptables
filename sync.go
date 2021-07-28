@@ -141,7 +141,7 @@ func GetRuleByName(name string) (rule *Rule, err error) {
 		}
 	}
 
-	return nil, fmt.Errorf("no rule wioth the name %s was found", name)
+	return nil, fmt.Errorf("no rule with the name %s was found", name)
 }
 
 func GetRulesByTarget(target Target) (rules []*Rule, err error) {
