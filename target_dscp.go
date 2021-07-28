@@ -47,10 +47,7 @@ func (t *TargetDSCP) Parse(option string, value string) {
 	if option == "--set-dscp" {
 		value = strings.Replace(value, "0x", "", -1)
 		value = strings.Replace(value, "0X", "", -1)
-		v, err := strconv.ParseInt(value, 16, 64)
-		if err != nil {
-			fmt.Println(err)
-		}
+		v, _ := strconv.ParseInt(value, 16, 64)
 		t.Value = int(v)
 	}
 }
