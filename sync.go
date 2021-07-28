@@ -129,6 +129,21 @@ func GetRuleById(id string) (rule *Rule, err error) {
 	return nil, fmt.Errorf("no rule with the id %s was found", id)
 }
 
+func GetRuleByName(name string) (rule *Rule, err error) {
+	rules, err := Sync()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, rule := range rules {
+		if rule.Name == name {
+			return rule, nil
+		}
+	}
+
+	return nil, fmt.Errorf("no rule wioth the name %s was found", name)
+}
+
 func GetRulesByTarget(target Target) (rules []*Rule, err error) {
 	r, err := Sync()
 	if err != nil {
