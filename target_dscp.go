@@ -2,6 +2,7 @@ package iptables
 
 import (
 	"fmt"
+	"strconv"
 )
 
 const (
@@ -42,7 +43,10 @@ func (t TargetDSCP) Validate(rule Rule) error {
 }
 
 func (t *TargetDSCP) Parse(option string, value string) {
-
+	if option == "--set-dscp" {
+		v, _ := strconv.ParseInt(value, 16, 64)
+		t.Value = int(v)
+	}
 }
 
 type TargetDSCPClass struct {

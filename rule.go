@@ -576,9 +576,9 @@ func (r *Rule) Parse(table string, ruleLine string) (err error) {
 			case "ACCEPT", "DROP", "QUEUE", "RETURN":
 				var t Target
 				if fields[idx] == "-j" {
-					t = &TargetJump{Value: target}
+					t = &TargetJump{Value: target} //TODO: should use the same parse function
 				} else {
-					t = &TargetGoto{Value: target}
+					t = &TargetGoto{Value: target} //TODO: should use the same parse function
 				}
 				r.Target = t
 				idx += 2
