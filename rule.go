@@ -688,7 +688,15 @@ func (r *Rule) Update(rule *Rule) {
 	if rule.Name != "" {
 		r.Name = rule.Name
 	}
-	//TODO: Protocol has an issue here because it's an *enum* value so it always has a default value which may or may not be what the user wants
+
+	if rule.Protocol != ProtocolInvalid {
+		r.Protocol = rule.Protocol
+	}
+
+	if rule.ProtocolNegated {
+		r.ProtocolNegated = rule.ProtocolNegated
+	}
+
 	if rule.Input != "" {
 		r.Input = rule.Input
 	}
