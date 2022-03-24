@@ -2,13 +2,21 @@ package iptables
 
 import "fmt"
 
-const (
-)
+const ()
+
+func NewMatchGeneric(name string, option string, value string, negated bool) *MatchGeneric {
+	m := &MatchGeneric{}
+	m.SetName(name)
+	m.SetOption(option)
+	m.SetValue(value)
+	m.SetNegated(negated)
+	return m
+}
 
 type MatchGeneric struct {
-	name string
-	option string
-	value  string
+	name    string
+	option  string
+	value   string
 	negated bool
 }
 

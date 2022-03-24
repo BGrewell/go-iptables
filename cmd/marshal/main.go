@@ -18,7 +18,7 @@ func main() {
 		Source:             "12.34.56.78",
 		Destination:        "1.2.3.4",
 		DestinationNegated: true,
-		TargetType:         "jump",
+		TargetAction:       "jump",
 		Target:             &iptables.TargetJump{Value: "ACCEPT"},
 	}
 

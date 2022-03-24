@@ -48,7 +48,7 @@ type Rule struct {
 	DestinationPort        string   `json:"destination_port,omitempty" yaml:"destination_port" xml:"destination_port"`
 	DestinationPortNegated bool     `json:"destination_port_negated,omitempty" yaml:"destination_port_negated" xml:"destination_port_negated"`
 	Target                 Target   `json:"target,omitempty" yaml:"target" xml:"target"`
-	TargetType             string   `json:"target_type,omitempty" yaml:"target_type" xml:"target_type"`
+	TargetAction           Action   `json:"target_action,omitempty" yaml:"target_action" xml:"target_action"`
 	Markers                []Marker `json:"markers,omitempty" yaml:"markers" xml:"markers"`
 	Matches                []Match  `json:"matches,omitempty" yaml:"matches" xml:"matches"`
 	Counters               Counter  `json:"counters,omitempty" yaml:"counters" xml:"counters"`
@@ -72,7 +72,6 @@ func (r *Rule) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-
 
 	if v, ok := obj["id"]; ok {
 		r.Id = v.(string)
@@ -311,6 +310,10 @@ func (r *Rule) setState(valid, applied bool) {
 func (r *Rule) execute() (err error) {
 	if validation := r.Validate(); validation != nil {
 		return validation
+	}
+
+	if r.Debug {
+		log.Println(r.String())
 	}
 
 	result, err := execute.ExecuteCmd(r.String())
