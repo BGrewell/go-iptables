@@ -504,6 +504,14 @@ func (r *Rule) Parse(table string, ruleLine string) (err error) {
 			r.Protocol = Protocol(fields[idx+1])
 			r.ProtocolNegated = negated
 			idx += 2
+		case "--dport":
+			r.DestinationPort = fields[idx+1]
+			r.DestinationPortNegated = negated
+			idx += 2
+		case "--sport":
+			r.SourcePort = fields[idx+1]
+			r.SourcePortNegated = negated
+			idx += 2
 		case "-m":
 			var m Match
 			name := fields[idx+1]
