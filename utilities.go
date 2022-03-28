@@ -17,13 +17,13 @@ import (
 
 var (
 	errNoMatch = fmt.Errorf("no matching rule was found")
-	tableLock = sync.Mutex{}
+	tableLock  = sync.Mutex{}
 )
 
 type RuleLocation struct {
 	Table string
 	Chain string
-	Line string
+	Line  string
 }
 
 func CommentExists(comment string) bool {
@@ -127,8 +127,6 @@ func DeleteByApp(app string) error {
 }
 
 func DeleteAllMatchingComments(comment string) error {
-	tableLock.Lock()
-	defer tableLock.Unlock()
 	for {
 		err := DeleteByComment(comment)
 		if err != nil && err == errNoMatch {
@@ -142,8 +140,6 @@ func DeleteAllMatchingComments(comment string) error {
 }
 
 func DeleteAllMatchingId(id string) error {
-	tableLock.Lock()
-	defer tableLock.Unlock()
 	for {
 		err := DeleteById(id)
 		if err != nil && err == errNoMatch {
@@ -157,8 +153,6 @@ func DeleteAllMatchingId(id string) error {
 }
 
 func DeleteAllMatchingName(name string) error {
-	tableLock.Lock()
-	defer tableLock.Unlock()
 	for {
 		err := DeleteByName(name)
 		if err != nil && err == errNoMatch {
@@ -172,8 +166,6 @@ func DeleteAllMatchingName(name string) error {
 }
 
 func DeleteAllMatchingApp(app string) error {
-	tableLock.Lock()
-	defer tableLock.Unlock()
 	for {
 		err := DeleteByApp(app)
 		if err != nil && err == errNoMatch {
@@ -230,7 +222,7 @@ func FindRuleByCommentWithPrefix(comment string, prefix *string) (location *Rule
 					// output but for some reason when it is done through this module they do have the double quotes on
 					// the comment so we need to deal with them being there or not being there
 					// trim off the markers and spaces
-					c := rule[mark+start+3:mark+end]
+					c := rule[mark+start+3 : mark+end]
 					c = strings.ReplaceAll(c, "\"", "")
 
 					match := comment
@@ -243,7 +235,7 @@ func FindRuleByCommentWithPrefix(comment string, prefix *string) (location *Rule
 						match = fmt.Sprintf("%s:%s", *prefix, comment)
 					}
 
-					mark = mark+end+2
+					mark = mark + end + 2
 					if match == c {
 						l := &RuleLocation{
 							Table: table,
@@ -402,4 +394,4 @@ func GetNegatedPattern(negated bool) string {
 	return ""
 }
 
-// TODO: Need to make sure all of these functions work with ipv4 and ipv6 as those are diffrent iptables
+// TODO: Need to make sure all of these functions work with ipv4 and ipv6 as those are different iptables
