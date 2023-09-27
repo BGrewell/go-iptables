@@ -231,6 +231,27 @@ func (r *Rule) UnmarshalJSON(b []byte) error {
 				return err
 			}
 			r.Target = &tt
+		case "reject":
+			var tt TargetReject
+			err = json.Unmarshal(tjson, &tt)
+			if err != nil {
+				return err
+			}
+			r.Target = &tt
+		case "redirect":
+			var tt TargetRedirect
+			err = json.Unmarshal(tjson, &tt)
+			if err != nil {
+				return err
+			}
+			r.Target = &tt
+		case "checksum":
+			var tt TargetChecksum
+			err = json.Unmarshal(tjson, &tt)
+			if err != nil {
+				return err
+			}
+			r.Target = &tt
 		case "":
 			var tt TargetJump
 			err = json.Unmarshal(tjson, &tt)
@@ -617,9 +638,24 @@ func (r *Rule) Parse(table string, ruleLine string) (err error) {
 					idx += 2
 				}
 				r.Target = t
+			case "REJECT":
+				t := &TargetReject{}
+				t.Parse(fields[idx+2], fields[idx+3])
+				r.Target = t
+				idx += 4
+			case "REDIRECT":
+				t := &TargetRedirect{}
+				t.Parse(fields[idx+2], fields[idx+3])
+				r.Target = t
+				idx += 4
+			case "CHECKSUM":
+				t := &TargetChecksum{}
+				t.Parse(fields[idx+2], "")
+				r.Target = t
+				idx += 3
 			default:
 				if !ValidChain(table, target) {
-					log.Printf("unkown target %s\n", target)
+					log.Printf("unknown target %s\n", target)
 					log.Printf("line: %s\n", ruleLine)
 				}
 

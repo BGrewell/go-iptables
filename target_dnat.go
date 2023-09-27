@@ -16,19 +16,6 @@ type TargetDNat struct {
 	DestinationPortRange string `json:"destination_port_range" yaml:"destination_port_range" xml:"destination_port_range"`
 }
 
-//func (t *TargetDNat) MarshalJSON() (b []byte, e error) {
-//	type TargetDNatHelper struct {
-//		Type string `json:"type"`
-//		Value *TargetDNat `json:"value"`
-//	}
-//
-//	th := TargetDNatHelper{
-//		Type: "dnat",
-//		Value: t,
-//	}
-//	return json.Marshal(th)
-//}
-
 func (t TargetDNat) String() string {
 	parts := make([]string, 0)
 	parts = append(parts, "DNAT")
@@ -57,7 +44,7 @@ func (t TargetDNat) Validate(rule Rule) error {
 	if rule.Table != TableNat {
 		return fmt.Errorf("target DNAT is only valid on the 'nat' table")
 	}
-	if rule.Chain == ChainInput || rule.Chain == ChainPreRouting {
+	if rule.Chain == ChainOutput || rule.Chain == ChainPreRouting {
 		return fmt.Errorf("target DNAT is only valid on the 'OUTPUT', 'PREROUTING' or custom chains")
 	}
 	if t.DestinationPort != "" && t.DestinationPortRange != "" && rule.Protocol == "" {
